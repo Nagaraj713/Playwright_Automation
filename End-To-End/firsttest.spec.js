@@ -40,6 +40,10 @@ test('Generate Report', async ({ page }) => {
 });
 
 
-test ('end to end', async{page}) => {
-  
-}
+test ('end to end', async ({page}) => {
+
+await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+await page.pause();
+getByText('Drop files here or click')
+getByText('browse')
+});
