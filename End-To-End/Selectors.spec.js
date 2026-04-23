@@ -237,3 +237,45 @@ test('Selectors', async ({ page }) => {
 });
 
 
+test('Assign Module', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Modules' }).click();
+     await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 1776319820 Add Tag QA_TEST_INTERNAL_2 -' }).getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Assign Modules' }).click();
+  await page.getByRole('textbox', { name: 'Search' }).click();
+   await page.getByRole('button', { name: 'Senior QA Group' }).click();
+  await page.getByRole('tab', { name: 'Department Access' }).click();
+  await page.getByRole('textbox', { name: 'Search' }).click();
+  await page.getByRole('tab', { name: 'User Special Access' }).click();
+  await page.getByRole('tab', { name: 'Domain' }).click();
+  await page.getByRole('textbox', { name: 'Search' }).click();
+    await page.getByRole('button', { name: 'Senior QA Group' }).getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'QA Jr Group' }).click();
+  await page.getByRole('button', { name: 'Assign' }).click();
+});
+
+
+test('Evaluations', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Evaluations' }).click();
+  await page.getByRole('cell', { name: 'MCQ Mode' }).nth(3).click();
+  await page.getByRole('button', { name: 'Identifying objects 30 / 30' }).click();
+  await page.getByRole('button', { name: 'Close' }).click();
+    });
+
+test('Trainings',async ({ page }) => {
+await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Trainings' }).click();
+    await page.getByRole('cell', { name: 'Moment Life Cycle Mode' }).nth(4).click();
+    await page.getByRole('button', { name: 'Identify objects' }).click();
+    await page.getByRole('button', { name: 'Close' }).click();
+});

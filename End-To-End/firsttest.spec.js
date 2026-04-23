@@ -43,7 +43,8 @@ test('Generate Report', async ({ page }) => {
 test ('end to end', async ({page}) => {
 
 await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+  await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
 await page.pause();
-getByText('Drop files here or click')
-getByText('browse')
 });
