@@ -16,27 +16,28 @@ const {test, expect} = require('@playwright/test')
 
 test('Login Flow : Incorrect Username', async ({ page }) => {
   await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-  await page.getByRole('textbox', { name: 'Username' }).click();
-  await page.getByRole('textbox', { name: 'Username' }).fill('admin@autovrse1.in');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
-  await page.getByRole('button', { name: 'Continue' }).click();
-  
+  await page.getByLabel('Username').fill('admin1@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+  console.log('Login Flow : Incorrect Username test executed successfully');
 });
 
 test('Login Flow : Incorrect Password', async ({ page }) => {
   await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-  await page.getByRole('textbox', { name: 'Username' }).click();
-  await page.getByRole('textbox', { name: 'Username' }).fill('admin@autovrse.in');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('wrongpassword');
+  await page.getByLabel('Username').fill('admin@autovrse.in');
+  await page.getByLabel('Password').fill('wrongpassword');
   await page.getByRole('button', { name: 'Continue' }).click();
-  
+  console.log('Login Flow : Incorrect Password test executed successfully');
 });
 
 test('Generate Report', async ({ page }) => {
-  await page.goto('https://dev-pulse-dashboard.autovrse-training.com/')
+  await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+  await page.getByLabel('Username').fill('admin@autovrse.in');
+  await page.getByLabel('Password').fill('admin');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Generate report' }).click();
+  console.log('Generate Report test executed successfully');
 });
 
 

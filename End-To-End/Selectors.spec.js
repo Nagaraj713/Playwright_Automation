@@ -1,19 +1,26 @@
 const { test, expect } = require('@playwright/test');
 
-// test('Evaluation Report Download: PDF', async ({ page }) => {
-//     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-//     await page.getByLabel('Username').fill('admin@autovrse.in')
-//     await page.getByLabel('Password').fill('admin')
-//     await page.getByRole('button', { name: 'Continue' }).click();
-//     await page.getByRole('link', { name: 'Evaluations' }).click();
-//     await page.getByRole('button', { name: 'Export',exact:true }).click();
-//     await page.getByRole('button', { name: 'Export As PDF' }).click();
-//     await page.getByRole('button', { name: 'Export completed - Click to' }).click();
-//     const page1Promise = page.waitForEvent('popup');
-//   await page.getByRole('button', { name: 'Download' }).nth(1).click();
-//   const page1 = await page1Promise;
+// ========================================
+// TEST 1: PDF EXPORT WORKFLOW
+// ========================================
+
+test('Evaluation Report Download: PDF', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in')
+    await page.getByLabel('Password').fill('admin')
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Evaluations' }).click();
+    await page.getByRole('button', { name: 'Export',exact:true }).click();
+    await page.getByRole('button', { name: 'Export As PDF' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: '1' }).click();
+  await page.getByRole('button', { name: 'Clear all notifications' }).click();
+    await page.getByRole('button', { name: 'Export completed - Click to' }).click();
+    const page1Promise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Download' }).nth(1).click();
+  const page1 = await page1Promise;
  
-// });
+});
 
 // test('Evaluation Report Download: Excel', async ({ page }) => {
 //     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
@@ -30,24 +37,30 @@ const { test, expect } = require('@playwright/test');
  
 // });
 
-// test('Analytics Page Different Tabs', async ({ page }) => {
-//     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-//     await page.getByLabel('Username').fill('admin@autovrse.in')
-//     await page.getByLabel('Password').fill('admin')
-//     await page.getByRole('button', { name: 'Continue' }).click();
-//     await page.getByRole('link', { name: 'Analytics' }).click();
-//     await page.waitForTimeout(2000);
-//     await page.getByRole('tab', { name: 'Module Analytics' }).click();
-//     await page.waitForTimeout(2000);
-//     await page.getByRole('tab', { name: 'Domain Analytics' }).click();
-//     await page.waitForTimeout(2000);
-//    await page.getByRole('tab', { name: 'Department Analytics' }).click();
+// ========================================
+// TEST 2: ANALYTICS PAGE DIFFERENT TABS
+// ========================================
+
+test('Analytics Page Different Tabs', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in')
+    await page.getByLabel('Password').fill('admin')
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Analytics' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByRole('tab', { name: 'Module Analytics' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByRole('tab', { name: 'Domain Analytics' }).click();
+    await page.waitForTimeout(2000);
+   await page.getByRole('tab', { name: 'Department Analytics' }).click();
    
-// });
+});
 
+// ========================================
+// TEST 3: USERS PAGE - CREATE AND DELETE USER
+// ========================================
 
-
-test('Claude automated',async ({page}) => {
+test('Users',async ({page}) => {
   // ─────────────────────────────────────────
   // 1. LOGIN
   // ─────────────────────────────────────────
@@ -111,7 +124,12 @@ test('Claude automated',async ({page}) => {
   console.log('✅ Admin (Automated/Claude) created successfully');
 
   // ─────────────────────────────────────────
-  // 5. DELETE ADMIN USER (Automated)
+  // 5. CREATE Trainee 
+  // ─────────────────────────────────────────
+  
+
+  // ─────────────────────────────────────────
+  // 6. DELETE ADMIN USER (Automated)
   // ─────────────────────────────────────────
   const automatedRow = page.locator('tr').filter({ hasText: 'Automated' });
   await automatedRow.locator('button').last().click();
@@ -121,7 +139,7 @@ test('Claude automated',async ({page}) => {
   console.log('✅ Admin user (Automated) deleted successfully');
 
   // ─────────────────────────────────────────
-  // 6. DELETE SUPER ADMIN USER (QA2)
+  // 7. DELETE SUPER ADMIN USER (QA2)
   // ─────────────────────────────────────────
   const qa2Row = page.locator('tr').filter({ hasText: 'QA2' });
   await qa2Row.locator('button').last().click();
@@ -131,7 +149,68 @@ test('Claude automated',async ({page}) => {
   console.log('✅ Super Admin user (QA2) deleted successfully');
 
   console.log('\n🎉 All tasks completed successfully!');
+
+  // ─── Step 1: Login ────────────────────────────────────────────
+  await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+  await page.getByRole('textbox', { name: 'Username' }).fill('admin@autovrse.in');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+
+  // ─── Step 2: Go to Users page ─────────────────────────────────
+  await page.getByRole('link', { name: 'Users' }).click();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(1000);
+
+  // ─── Step 3: Click Add Trainee ────────────────────────────────
+  await page.getByRole('button', { name: 'Add Trainee' }).click();
+  await page.waitForTimeout(2000);
+
+  // ─── Step 4: Fill Display Name ────────────────────────────────
+  await page.getByRole('textbox', { name: 'Display Name' }).fill('q');
+
+  // ─── Step 5: Select Groups (QA1 and Senior QA) ───────────────
+  await page.getByRole('combobox', { name: 'Groups' }).click();
+  await page.waitForTimeout(500);
+  await page.evaluate(() => {
+    const options = [...document.querySelectorAll('li')];
+    options.find(el => el.textContent.trim() === 'QA1')?.click();
+  });
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    const options = [...document.querySelectorAll('li')];
+    options.find(el => el.textContent.trim() === 'Senior QA')?.click();
+  });
+  await page.waitForTimeout(300);
+
+  // Close the dropdown
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(500);
+
+  // ─── Step 6: Fill Employee Code ───────────────────────────────
+  await page.getByRole('textbox', { name: 'Employee Code' }).fill('1');
+
+  // ─── Step 7: Create User ──────────────────────────────────────
+  await page.getByRole('button', { name: 'Create User' }).click();
+  await page.waitForTimeout(3000);
+
+  // ─── Step 8: Delete the user ──────────────────────────────────
+  // Click the three dots menu on the first row
+  await page.locator('table tbody tr').first().locator('button').click();
+  await page.waitForTimeout(1000);
+
+  // Click Delete
+  await page.getByText('Delete').click();
+  await page.waitForTimeout(2000);
+
+  console.log('✅ Trainee created and deleted successfully!');
+
+
 });
+
+// ========================================
+// TEST 4: ANALYTICS PAGE DROPDOWNS
+// ========================================
 
 test('Analytics Page Dropdowns', async ({ page }) => {
     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
@@ -161,8 +240,11 @@ test('Analytics Page Dropdowns', async ({ page }) => {
     // #\:r5m\: > li:nth-child(3)
 });
 
+// ========================================
+// TEST 5: GET SUPPORT PAGE FORM FILL AND SUBMISSION
+// ========================================
 
-test('Selectors', async ({ page }) => {
+test('Get Support', async ({ page }) => {
     // Setup error and console listeners to capture any errors
     let pageError = null;
     let consoleMessages = [];
@@ -236,6 +318,9 @@ test('Selectors', async ({ page }) => {
     }
 });
 
+// ========================================
+// TEST 7: ASSIGN MODULE TO USER
+// ========================================
 
 test('Assign Module', async ({ page }) => {
     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
@@ -257,6 +342,9 @@ test('Assign Module', async ({ page }) => {
   await page.getByRole('button', { name: 'Assign' }).click();
 });
 
+// ========================================
+// TEST 8: EVALUATIONS PAGE 
+// ========================================
 
 test('Evaluations', async ({ page }) => {
     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
@@ -269,6 +357,10 @@ test('Evaluations', async ({ page }) => {
   await page.getByRole('button', { name: 'Close' }).click();
     });
 
+// ========================================
+// TEST 9: TRAININGS PAGE
+// ========================================
+
 test('Trainings',async ({ page }) => {
 await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
     await page.getByLabel('Username').fill('admin@autovrse.in');
@@ -280,12 +372,55 @@ await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/')
     await page.getByRole('button', { name: 'Close' }).click();
 });
 
-test('Devices', async ({ page }) => {
+// ========================================
+// TEST 10: DEVICES PAGE
+// ========================================
+
+test('Devices', async ({ page }) => 
+{    
     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
     await page.getByLabel('Username').fill('admin@autovrse.in');
     await page.getByLabel('Password').fill('admin');
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByRole('link', { name: 'Devices' }).click();
     await page.getByText('Unknown DeviceID: a52f395f70active1Domains1Users').click();
+
+    //Scroll within the dialog
+    await page.evaluate(() => {
+    const dialog = document.querySelector('.MuiDialogContent-root');
+    if (dialog) dialog.scrollBy({ top: 800, behavior: 'smooth' });
+  });
+  await page.waitForTimeout(1500);
     await page.getByRole('button', { name: 'Close' }).click();
+        await page.getByRole('button', { name: 'Export',exact:true }).click();
+    await page.getByRole('button', { name: 'Export As PDF' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: 'View Export Jobs' }).click();
+    const page1Promise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Download' }).nth(0).click();
+  const page1 = await page1Promise;
+});
+
+// ========================================
+// TEST 11: SIGN OUT FUNCTIONALITY
+// ========================================
+
+test('Sign out', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('banner').getByRole('img').click();
+  await page.getByRole('menu').click();
+});
+
+
+
+test ('end to end', async ({page}) => {
+
+await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+  await page.getByLabel('Username').fill('admin@autovrse.in');
+    await page.getByLabel('Password').fill('admin');
+    await page.getByRole('button', { name: 'Continue' }).click();
+await page.pause();
 });
