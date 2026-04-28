@@ -354,7 +354,57 @@ test('Evaluations', async ({ page }) => {
     await page.getByRole('link', { name: 'Evaluations' }).click();
   await page.getByRole('cell', { name: 'MCQ Mode' }).nth(3).click();
   await page.getByRole('button', { name: 'Identifying objects 30 / 30' }).click();
-  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('button', { name: 'Close' }).click(); 
+  await page.getByRole('button', { name: 'Toggle full screen' }).click();
+  await page.getByLabel('Toggle full screen').click();
+  await page.getByRole('row', { name: 'Toggle select row Platform Admin 1 PFadmin1 MCQ Mode Multiplayer 01/04/2026 12:21 - 01/04/2026 12:22 1 minute 16 seconds 30 / 30 Pass Platform Team Row Actions', exact: true }).getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Bulk delete' }).click();
+  await page.getByRole('button', { name: 'No' }).click();
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+  await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility User' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility User' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Module' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Module' }).check();
+  await page.getByRole('checkbox', { name: 'Player Mode' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Player Mode' }).check();
+   await page.getByRole('checkbox', { name: 'Session Time' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Session Time' }).check();
+   await page.getByRole('checkbox', { name: 'Duration' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Duration' }).check();
+ await page.getByRole('checkbox', { name: 'Score' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Score' }).check();
+ await page.getByRole('checkbox', { name: 'status' }).uncheck();
+  await page.getByRole('checkbox', { name: 'status' }).check();
+ await page.getByRole('checkbox', { name: 'Group' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Group' }).check();
+
+
+  await page.getByRole('button', { name: 'Hide all' }).click();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility User' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Module' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Player Mode' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Session Time' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Duration' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Score' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility status' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Group' }).check();
+  await page.getByRole('button', { name: 'Reset order' }).click();
+  await page.locator('.MuiBackdrop-root').click();
+      await page.getByRole('button', { name: 'Export',exact:true }).click();
+    await page.getByRole('button', { name: 'Export As PDF' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: '1' }).click();
+  await page.getByRole('button', { name: 'Clear all notifications' }).click();
+    await page.getByRole('button', { name: 'Export completed - Click to' }).click();
+    await page.waitForTimeout(5000);
+  await page.getByRole('button', { name: 'Download' }).nth(0).click();
+
+
     });
 
 // ========================================
@@ -367,9 +417,10 @@ await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/')
     await page.getByLabel('Password').fill('admin');
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByRole('link', { name: 'Trainings' }).click();
-    await page.getByRole('cell', { name: 'Moment Life Cycle Mode' }).nth(4).click();
-    await page.getByRole('button', { name: 'Identify objects' }).click();
+    await page.getByRole('cell', { name: 'Camp8- Nupur' }).nth(1).click();
+    await page.getByRole('button', { name: 'The Dark Awakening And First Drain' }).click();
     await page.getByRole('button', { name: 'Close' }).click();
+
 });
 
 // ========================================
@@ -414,13 +465,99 @@ test('Sign out', async ({ page }) => {
   await page.getByRole('menu').click();
 });
 
+// ========================================
+// TEST 12: GROUPS PAGE
+// ========================================
 
+test('Groups Page', async ({ page }) => {
+  await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+  await page.getByRole('textbox', { name: 'Username' }).click();
+  await page.getByRole('textbox', { name: 'Username' }).fill('admin@autovrse.in');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: 'Organization' }).click();
+  await page.getByRole('link', { name: 'Groups' }).click();
+  await page.locator('div:nth-child(61) > .MuiPaper-root > .MuiBox-root.css-o8w36n > .MuiButtonBase-root').click();
+  await page.locator('.MuiButtonBase-root.MuiButton-root.MuiButton-outlined').click();
+  await page.getByRole('textbox', { name: 'Search administrators...' }).click();
+  await page.getByRole('textbox', { name: 'Search administrators...' }).fill('qa');
+  await page.locator('.MuiBox-root.css-ftn5hm > div:nth-child(2) > .MuiButtonBase-root').click();
+  await page.waitForTimeout(4000);
+  await page.getByRole('tab', { name: 'Trainees' }).click();
+  await page.locator('.MuiButtonBase-root.MuiButton-root.MuiButton-outlined').click();
+  await page.getByRole('textbox', { name: 'Search by username' }).click();
+  await page.getByRole('textbox', { name: 'Search by username' }).fill('mt');
+  await page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall.css-5p7eof').first().click();
+  await page.waitForTimeout(4000);
+  await page.getByRole('tab', { name: 'Access Modules' }).click();
+  await page.locator('.MuiButtonBase-root.MuiButton-root.MuiButton-outlined').click();
+  await page.locator('.MuiBox-root > div:nth-child(3) > .MuiButtonBase-root').click();
+  await page.waitForTimeout(4000);
+  await page.getByRole('button', { name: 'Edit group details' }).click();
+   await page.getByRole('textbox', { name: 'Group Name' }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).fill('Should work');
+  await page.getByRole('textbox', { name: 'Password' }).fill('1777');
+    await page.waitForTimeout(5000);
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('button', { name: 'Close details panel' }).click();
+  await page.waitForTimeout(4000);
+  await page.locator('div:nth-child(61) > .MuiPaper-root > .MuiBox-root.css-o8w36n > .MuiButtonBase-root').click();
+  await page.waitForTimeout(4000);
+  await page.getByRole('button', { name: 'Close details panel' }).click();
+  // // await page.getByRole('button', { name: 'Delete group' }).click();
+  // // const dialogPromise = page.waitForEvent('dialog');
+  // // await page.click('your-delete-button');
+  // // const dialog = await dialogPromise;
+  // // expect(dialog.message()).toContain('Are you sure you want to delete this group?');
+  // // await dialog.accept();
 
-test ('end to end', async ({page}) => {
+  await page.getByRole('button', { name: 'Form Editor' }).click();
+  await page.getByRole('button', { name: 'Add Group' }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).click();  
+  await page.getByRole('textbox', { name: 'Group Name' }).fill('Should work');
+  await page.getByRole('textbox', { name: 'Password' }).fill('1777');
+  await page.getByRole('button', { name: 'Create Group' }).click();
+  await page.getByRole('row', { name: 'Expand Toggle select row Should work' }).getByLabel('Row Actions').click();
+    await page.getByRole('menuitem', { name: 'Edit', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).fill('sss1');
+   await page.getByRole('button', { name: 'Save Changes' }).click();
+  await page.getByRole('row', { name: 'Expand Toggle select row sss1' }).getByLabel('Row Actions').click();
+  await page.getByText('Edit Password').click();
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('4444');
+  await page.getByRole('button', { name: 'Save Changes' }).click();
+  await page.getByRole('row', { name: 'Expand Toggle select row sss1' }).getByLabel('Row Actions').click();
+  await page.getByRole('menuitem', { name: 'Delete' }).click();
+  await page.getByRole('button', { name: 'ORG CHART' }).click();
 
-await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-  await page.getByLabel('Username').fill('admin@autovrse.in');
-    await page.getByLabel('Password').fill('admin');
-    await page.getByRole('button', { name: 'Continue' }).click();
-await page.pause();
+// ========================================
+// CREATE ANOTHER GROUP TO TEST DELETE AND OTHER FUNCTIONALITIES
+// ========================================
+
+  await page.getByRole('button', { name: 'Add Group' }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).click();
+  await page.getByRole('textbox', { name: 'Group Name' }).fill('qqq');
+  await page.getByRole('textbox', { name: 'Group Password' }).click();
+  await page.getByRole('textbox', { name: 'Group Password' }).fill('qq');
+  await page.getByRole('button', { name: 'Create Group' }).click();
+  await page.getByRole('cell', { name: 'Expand' }).first().click();
+  await page.getByRole('row', { name: 'Expand Toggle select row qqq' }).getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Bulk delete' }).click();
+  await page.getByRole('button', { name: 'No' }).click();
+  await page.getByRole('button', { name: 'Toggle full screen' }).click();
+  await page.getByLabel('Toggle full screen').click();
+  await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
+  await page.locator('.MuiBackdrop-root').click();
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+  await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+  await page.getByRole('button', { name: 'Reset order' }).click();
+  await page.getByRole('button', { name: 'Hide all' }).click();
+  await page.getByRole('button', { name: 'Hide all' }).click();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
 });
+
