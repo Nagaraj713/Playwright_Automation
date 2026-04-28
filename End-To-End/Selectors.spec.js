@@ -615,9 +615,8 @@ test('Groups Page', async ({ page }) => {
 });
 
 // ========================================
-// TEST 12: SCHEDULES PAGE
+// TEST 13: SCHEDULES PAGE
 // ========================================
-
 
 test('Schedules', async ({ page }) => {
   await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
@@ -625,5 +624,51 @@ test('Schedules', async ({ page }) => {
   await page.getByLabel('Password').fill('admin');
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('link', { name: 'Schedules' }).click();
-  
+  await page.waitForTimeout(4000);
+  await page.getByRole('cell', { name: 'check march' }).getByRole('paragraph').click();
+  await page.getByRole('button', { name: 'Go back to schedules list' }).click();
+  await page.getByRole('cell', { name: 'QATest6 - Today Range' }).click();
+  await page.getByRole('button', { name: 'Go back to schedules list' }).click();
+  await page.getByRole('row', { name: 'check march 29 Groups:' }).getByLabel('Row Actions').click();
+  await page.getByText('Edit').click();
+  await page.getByRole('textbox', { name: 'Enter schedule name' }).click();
+  await page.getByRole('textbox', { name: 'Enter schedule name' }).fill('check march 28');
+  await page.getByRole('button', { name: 'Save Changes' }).click();
+  await page.getByRole('row', { name: 'check march 28 Groups:' }).getByLabel('Row Actions').click();
+  await page.getByText('Delete').click();
+  await page.getByRole('button', { name: 'No' }).click();
+  await page.getByRole('button', { name: 'Add schedule' }).click();
+  await page.getByRole('textbox', { name: 'Enter experience name' }).click();
+  await page.getByRole('textbox', { name: 'Enter experience name' }).fill('New Automated Schedule');
+  await page.getByRole('button', { name: 'Select Modules' }).click();
+  await page.getByRole('button').nth(3).click();
+  await page.getByRole('button', { name: 'Hide Modules' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByLabel('Add Schedule').getByText('23').click();
+  await page.getByText('30').nth(4).click();
+  await page.getByRole('checkbox', { name: 'Training' }).check();
+  await page.getByRole('checkbox', { name: 'Evaluation' }).check();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('button', { name: 'Select Groups' }).click();
+  await page.getByText('qqq').click();
+  await page.getByRole('button', { name: 'Hide Groups' }).click();
+  await page.getByRole('button', { name: 'Select Users' }).click();
+  await page.getByRole('textbox', { name: 'Search by username...' }).click();
+  await page.getByRole('textbox', { name: 'Search by username...' }).fill('mt3');
+  await page.getByText('MigrationTrainee3').click();
+  await page.getByRole('button', { name: 'Create Schedule' }).click();
+  await page.waitForTimeout(4000);
+  console.log('✅ New schedule created successfully');
+  await page.getByRole('row', { name: 'New Automated Schedule Groups:' }).getByLabel('Row Actions').click();
+  await page.getByText('Delete').click();
+  await page.getByRole('button', { name: 'Yes' }).click();
+  console.log('✅ Schedule deleted successfully');
+    await page.locator('span').filter({ hasText: 'check march' }).click();
+  await page.locator('.MuiBackdrop-root').click();
+  await page.locator('span').filter({ hasText: 'Claude' }).click();
+  await page.locator('.MuiBackdrop-root').click();
+  await page.locator('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall.css-u27xt2').first().click();
+  await page.locator('button:nth-child(3)').click();
+  await page.locator('span').filter({ hasText: 'check march' }).click();
+  await page.locator('.MuiBackdrop-root').click();
 });
