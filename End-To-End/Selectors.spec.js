@@ -54,6 +54,24 @@ test('Analytics Page Different Tabs', async ({ page }) => {
     await page.waitForTimeout(2000);
    await page.getByRole('tab', { name: 'Department Analytics' }).click();
    
+// ========================================
+// AI ANALYTICS 
+// ========================================
+
+   await page.getByRole('button', { name: 'AI Analytics' }).click();
+   await page.waitForTimeout(2000);
+   await page.getByRole('textbox', { name: 'Ask anything... e.g., Show me' }).click();
+   await page.getByRole('textbox', { name: 'Ask anything... e.g., Show me' }).fill('I need a list of training data');
+   await page.getByRole('main').getByRole('button').filter({ hasText: /^$/ }).click();
+
+// ========================================
+// CUSTOMIZE DASHBOARD
+// ========================================
+
+   await page.getByRole('button', { name: 'customize Dashboard' }).click();
+   await page.waitForTimeout(2000);
+  
+
 });
 
 // ========================================
@@ -672,3 +690,4 @@ test('Schedules', async ({ page }) => {
   await page.locator('span').filter({ hasText: 'check march' }).click();
   await page.locator('.MuiBackdrop-root').click();
 });
+
