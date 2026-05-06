@@ -46,7 +46,6 @@ test('Analytics Page Different Tabs', async ({ page }) => {
     await page.getByLabel('Username').fill('admin@autovrse.in')
     await page.getByLabel('Password').fill('admin')
     await page.getByRole('button', { name: 'Continue' }).click();
-    await page.getByRole('link', { name: 'Analytics' }).click();
     await page.waitForTimeout(2000);
     await page.getByRole('tab', { name: 'Module Analytics' }).click();
     await page.waitForTimeout(2000);
@@ -67,10 +66,28 @@ test('Analytics Page Different Tabs', async ({ page }) => {
 // ========================================
 // CUSTOMIZE DASHBOARD
 // ========================================
-
-   await page.getByRole('button', { name: 'customize Dashboard' }).click();
-   await page.waitForTimeout(2000);
-  
+  await page.getByRole('link', { name: 'Analytics' }).click();
+  await page.waitForTimeout(2000);
+  await page.getByRole('button', { name: 'customize Dashboard' }).click();
+  await page.waitForTimeout(2000);
+  await page.locator('.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-1i25yv0').first().click();
+  await page.locator('.MuiBox-root.css-k1v68u > div:nth-child(2)').click();
+  await page.locator('div').filter({ hasText: /^hello2Total count of active modules in the systemPie$/ }).first().click();
+  await page.locator('.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeSmall.MuiButton-textSizeSmall.MuiButton-colorPrimary.css-1ytfe3k').click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(3).click();
+  await page.getByRole('button', { name: 'Analytics Library' }).click();
+  await page.locator('.MuiBox-root.css-k1v68u > div:nth-child(2)').click();
+  await page.locator('.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeSmall.MuiButton-textSizeSmall.MuiButton-colorPrimary.css-1ytfe3k').click();
+  await page.getByRole('button', { name: 'Save New Dashboard' }).click();
+  await page.getByRole('textbox', { name: 'Enter a name for your' }).fill('qqqq');
+  await page.getByRole('button', { name: 'Save Dashboard' }).click();
+  await page.getByRole('button').first().click();
+  await page.getByRole('checkbox', { name: 'Make Private Restrict access' }).check();
+  await page.getByRole('button', { name: 'Save Dashboard' }).click();
+  await page.getByRole('button', { name: 'Open' }).click();
+  await page.getByRole('option', { name: 'Admin', exact: true }).click();
+  await page.getByRole('button', { name: 'Save Dashboard' }).click();
+  await page.getByRole('button', { name: 'Save Dashboard' }).click();
 
 });
 
