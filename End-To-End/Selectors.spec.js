@@ -46,7 +46,7 @@ test('Analytics Page Different Tabs', async ({ page }) => {
     await page.getByLabel('Username').fill('admin@autovrse.in')
     await page.getByLabel('Password').fill('admin')
     await page.getByRole('button', { name: 'Continue' }).click();
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(5000);
     await page.getByRole('tab', { name: 'Module Analytics' }).click();
     await page.waitForTimeout(2000);
     await page.getByRole('tab', { name: 'Domain Analytics' }).click();
@@ -87,7 +87,7 @@ test('Analytics Page Different Tabs', async ({ page }) => {
   await page.getByRole('button', { name: 'Open' }).click();
   await page.getByRole('option', { name: 'Admin', exact: true }).click();
   await page.getByRole('button', { name: 'Save Dashboard' }).click();
-  await page.getByRole('button', { name: 'Save Dashboard' }).click();
+
 
 });
 
