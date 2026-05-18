@@ -170,6 +170,32 @@ test('Analytics Page', async ({ page }) => {
 // ========================================
 // DEPARTMENT ANALYTICS 
 // ========================================
+  await page.getByRole('tab', { name: 'Department Analytics' }).click();
+  await page.waitForTimeout(1000);
+
+// ─── Change Session Type to Evaluation Sessions ─────────────────
+  await page.getByText('Training Sessions').click();
+  await page.getByRole('option', { name: 'Evaluation Sessions' }).click();
+
+// ─── Select Autovrse Domain ─────────────────────
+  await page.getByRole('button', { name: 'Select Domain' }).click();
+  await page.getByRole('paragraph').filter({ hasText: /^AutoVRse$/ }).click();
+  await page.getByRole('combobox').nth(1).click();
+
+  // ─── Select All Departments────────────────────
+  await page.getByRole('option', { name: 'All Departments' }).click();
+
+  // ─── Open Module Name filter dropdown ─────────────────────────
+  await page.getByText('Filter by Module Name').click();
+  await page.getByRole('option', { name: 'MCQ Mode' }).click();
+  await page.getByRole('option', { name: 'Moment Life Cycle Mode' }).click();
+  await page.getByRole('option', { name: 'Load AFT Change Parts Training' }).click();
+  await page.getByRole('option', { name: 'Test Cycle Training' }).click();
+  await page.locator('.MuiBackdrop-root').click();
+  await page.getByRole('button', { name: 'Clear filter' }).click();
+  await page.getByRole('button', { name: 'AutoVRse' }).click();
+  await page.getByRole('button').nth(1).click();
+  await page.locator('div').filter({ hasText: /^autovrse Department$/ }).nth(1).click();
 
 });
 
@@ -436,7 +462,7 @@ test('Get Support', async ({ page }) => {
 });
 
 // ========================================
-// TEST 7: ASSIGN MODULE TO USER
+// TEST 7: MODULES PAGE
 // ========================================
 
 test('Assign Module', async ({ page }) => {
@@ -444,20 +470,108 @@ test('Assign Module', async ({ page }) => {
     await page.getByLabel('Username').fill('admin@autovrse.in');
     await page.getByLabel('Password').fill('admin');
     await page.getByRole('button', { name: 'Continue' }).click();
+    await page.waitForTimeout(2000);
     await page.getByRole('link', { name: 'Modules' }).click();
-     await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 1776319820 Add Tag QA_TEST_INTERNAL_2 -' }).getByRole('checkbox').check();
-  await page.getByRole('button', { name: 'Assign Modules' }).click();
-  await page.getByRole('textbox', { name: 'Search' }).click();
-   await page.getByRole('button', { name: 'Senior QA Group' }).click();
-  await page.getByRole('tab', { name: 'Department Access' }).click();
-  await page.getByRole('textbox', { name: 'Search' }).click();
-  await page.getByRole('tab', { name: 'User Special Access' }).click();
-  await page.getByRole('tab', { name: 'Domain' }).click();
-  await page.getByRole('textbox', { name: 'Search' }).click();
-    await page.getByRole('button', { name: 'Senior QA Group' }).getByRole('checkbox').check();
-  await page.getByRole('button', { name: 'QA Jr Group' }).click();
-  await page.getByRole('button', { name: 'Assign' }).click();
+
+// ------------------- Assigning module to a user----------------------
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByRole('checkbox').check();
+await page.getByRole('button', { name: 'Assign Modules' }).click();
+await page.getByRole('textbox', { name: 'Search' }).click();
+await page.getByRole('button', { name: 'Senior QA Group' }).click();
+await page.getByRole('tab', { name: 'Department Access' }).click();
+await page.getByRole('textbox', { name: 'Search' }).click();
+await page.getByRole('tab', { name: 'User Special Access' }).click();
+await page.getByRole('button', { name: 'test1 group1 User delete' }).getByRole('checkbox').check();
+await page.getByRole('tab', { name: 'Domain' }).click();
+await page.getByRole('textbox', { name: 'Search' }).click();
+await page.getByRole('button', { name: 'Senior QA Group' }).click();
+await page.getByRole('button', { name: 'QA Jr Group' }).click();
+await page.getByRole('button', { name: 'Assign' }).click();
+
+// ---------------- Removing assigned module ----------------------  
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByRole('checkbox').check();
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByLabel('Row Actions').click();
+await page.getByText('Assigned Entities').click();
+await page.getByRole('textbox', { name: 'Search' }).click();
+await page.getByRole('textbox', { name: 'Search' }).fill('qa');
+await page.getByRole('button', { name: 'QA Jr Group' }).getByRole('checkbox').uncheck();
+await page.getByRole('button', { name: 'Senior QA Group' }).getByRole('checkbox').uncheck();
+await page.getByRole('button', { name: 'Assign' }).click();
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByLabel('Row Actions').click();
+await page.getByText('Assigned Entities').click();
+await page.getByRole('tab', { name: 'User Special Access' }).click();
+await page.getByRole('textbox', { name: 'Search' }).click();
+await page.getByRole('button', { name: 'test1 group1 User delete' }).getByRole('checkbox').uncheck();
+await page.getByRole('button', { name: 'Assign' }).click();
+
+//------ Deleting the module --------
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByRole('checkbox').check();
+await page.getByRole('button', { name: 'Bulk delete' }).click();
+await page.getByRole('button', { name: 'No' }).click();
+await page.getByRole('row', { name: 'Toggle select row QA_TEST_INTERNAL_2 Platform Team Test Repo 1776319820 Add Tag' }).getByRole('checkbox').uncheck();
+
+//------ Show/Hide filters --------
+await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+
+//------ Toggle full screen --------
+await page.getByRole('button', { name: 'Toggle full screen' }).click();
+await page.getByLabel('Toggle full screen').click();
+
+//------ Show/Hide columns --------
+await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).uncheck();
+await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
+await page.getByRole('checkbox', { name: 'Toggle visibility Project Name' }).uncheck();
+await page.getByRole('checkbox', { name: 'Toggle visibility Project Name' }).check();
+await page.getByRole('checkbox', { name: 'Toggle visibility Index' }).uncheck();
+await page.getByRole('checkbox', { name: 'Toggle visibility Index' }).check();
+await page.getByRole('checkbox', { name: 'Toggle visibility Tags' }).uncheck();
+await page.getByRole('checkbox', { name: 'Toggle visibility Tags' }).check();
+await page.getByRole('checkbox', { name: 'Toggle visibility Description' }).uncheck();
+await page.getByRole('checkbox', { name: 'Toggle visibility Description' }).check();
+await page.getByRole('button', { name: 'Hide all' }).click();
+await page.getByRole('button', { name: 'Show all' }).click();
+
+//------ Filter Functionality --------
+await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+await page.waitForTimeout(1000);
+const projectBtn = page.getByRole('menuitem', { name: 'Move Toggle visibility Project Name' }).getByLabel('Move');
+ const nameItem = page.getByRole('menuitem', { name: 'Move Toggle visibility Name' });
+
+  const projectBox = await projectBtn.boundingBox();
+  const nameBox = await nameItem.boundingBox();
+
+  const startX = projectBox.x + projectBox.width / 2;
+  const startY = projectBox.y + projectBox.height / 2;
+  const endX = nameBox.x + nameBox.width / 2;
+  const endY = nameBox.y; // top edge of Name row
+
+  // ─── Perform the drag with long hold + slow steps ─────────────
+  await page.mouse.move(startX, startY);
+  await page.waitForTimeout(500);
+  await page.mouse.down();
+  await page.waitForTimeout(800); // ✅ Key: hold 800ms before moving to trigger drag mode
+
+  // Move in 50 tiny incremental steps
+  const totalSteps = 50;
+  for (let i = 1; i <= totalSteps; i++) {
+    const x = startX + (endX - startX) * (i / totalSteps);
+    const y = startY + (endY - startY) * (i / totalSteps);
+    await page.mouse.move(x, y);
+    await page.waitForTimeout(20); // ✅ Key: 20ms delay between each step
+  }
+
+  await page.waitForTimeout(500);
+  await page.mouse.up();
+  await page.waitForTimeout(1000);
+ 
+  await page.getByRole('button', { name: 'Reset Order' }).click();
+  await page.locator('.MuiBackdrop-root').click();
+
 });
+
+
 
 // ========================================
 // TEST 8: EVALUATIONS PAGE 
