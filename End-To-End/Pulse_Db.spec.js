@@ -14,6 +14,7 @@ test('Evaluation Report Download: PDF', async ({ page }) => {
     await page.getByRole('button', { name: 'Export As PDF' }).click();
     await page.waitForTimeout(2000);
     await page.getByRole('button', { name: '1' }).click();
+  
   await page.getByRole('button', { name: 'Clear all notifications' }).click();
     await page.getByRole('button', { name: 'Export completed - Click to' }).click();
     const page1Promise = page.waitForEvent('popup');
@@ -22,20 +23,20 @@ test('Evaluation Report Download: PDF', async ({ page }) => {
  
 });
 
-// test('Evaluation Report Download: Excel', async ({ page }) => {
-//     await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
-//     await page.getByLabel('Username').fill('admin@autovrse.in')
-//     await page.getByLabel('Password').fill('admin')
-//     await page.getByRole('button', { name: 'Continue' }).click();
-//     await page.getByRole('link', { name: 'Evaluations' }).click();
-//     await page.getByRole('button', { name: 'Export',exact:true }).click();
-//     await page.getByRole('button', { name: 'Export As Excel' }).click();
-//     await page.getByRole('button', { name: 'Export completed - Click to' }).click();
-//     const page1Promise = page.waitForEvent('popup');
-//   await page.getByRole('button', { name: 'Download' }).nth(1).click();
-//   const page1 = await page1Promise;
+test('Evaluation Report Download: Excel', async ({ page }) => {
+    await page.goto('https://dev-pulse-dashboard.autovrse-training.com/auth/login/');
+    await page.getByLabel('Username').fill('admin@autovrse.in')
+    await page.getByLabel('Password').fill('admin')
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('link', { name: 'Evaluations' }).click();
+    await page.getByRole('button', { name: 'Export',exact:true }).click();
+    await page.getByRole('button', { name: 'Export As Excel' }).click();
+    await page.getByRole('button', { name: 'Export completed - Click to' }).click();
+    const page1Promise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download' }).nth(1).click();
+  const page1 = await page1Promise;
  
-// });
+});
 
 // ========================================
 // TEST 2: ANALYTICS PAGE DIFFERENT TABS
@@ -267,11 +268,6 @@ test('Users',async ({page}) => {
   console.log('✅ Admin (Automated/Claude) created successfully');
 
   // ─────────────────────────────────────────
-  // 5. CREATE Trainee 
-  // ─────────────────────────────────────────
-  
-
-  // ─────────────────────────────────────────
   // 6. DELETE ADMIN USER (Automated)
   // ─────────────────────────────────────────
   const automatedRow = page.locator('tr').filter({ hasText: 'Automated' });
@@ -348,6 +344,87 @@ test('Users',async ({page}) => {
 
   console.log('✅ Trainee created and deleted successfully!');
 
+
+ ////////////// Newly added tests for users page
+  await page.getByRole('row', { name: 'Toggle select row test456 123456' }).getByRole('checkbox').check();
+
+  // Bulk delete action
+  await page.getByRole('button', { name: 'Bulk delete' }).click();
+  await page.getByRole('button', { name: 'No' }).click();
+    await page.getByRole('row', { name: 'Toggle select row test456 123456' }).getByRole('checkbox').uncheck();
+   // Show/Hide filters
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+  await page.getByRole('button', { name: 'Show/Hide filters' }).click();
+
+    // Toggle full screen
+   await page.getByRole('button', { name: 'Toggle full screen' }).click();
+  await page.getByLabel('Toggle full screen').click();
+
+  //Show/Hide columns
+  await page.getByRole('button', { name: 'Show/Hide columns' }).click();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Name' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Username' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Username' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Role' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Role' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Group' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Toggle visibility Group' }).check();
+   await page.locator('.MuiBackdrop-root').click();
+
+   // assign modules
+   await page.getByRole('row', { name: 'Toggle select row test456 123456' }).getByRole('checkbox').check();
+    await page.getByRole('button', { name: 'Assign Modules' }).click();
+    await page.getByRole('button', { name: 'Close' }).click();
+    await page.getByRole('button', { name: 'Assign Modules' }).click();
+  await page.getByRole('button', { name: 'QA_Test_1 Created on: 4/16/' }).click();
+  await page.getByRole('button', { name: 'Test QA 1 Created on: 4/16/' }).click();
+  await page.locator('div:nth-child(10) > .MuiButtonBase-root > .PrivateSwitchBase-input').check();
+  await page.getByRole('button', { name: 'Assign Modules' }).click();
+
+  //check whether modules are assigned or not
+  await page.getByRole('link', { name: 'Modules' }).click();
+  await page.locator('tr:nth-child(8) > .MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeMedium.css-2eatx8 > .MuiButtonBase-root').click();
+  await page.getByText('Assigned Entities').click();
+  await page.getByRole('tab', { name: 'User Special Access' }).click();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.locator('tr:nth-child(9) > .MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeMedium.css-2eatx8 > .MuiButtonBase-root').click();
+  await page.getByText('Assigned Entities').click();
+  await page.getByRole('tab', { name: 'User Special Access' }).click();
+  await page.getByRole('button', { name: 'Close' }).click();
+
+  //Edit user details
+  await page.getByRole('link', { name: 'Users' }).click();
+   await page.getByRole('row', { name: 'Toggle select row test456 123456' }).getByLabel('Row Actions').click();
+  await page.getByRole('menuitem', { name: 'Edit', exact: true }).click();
+
+  //name change
+   await page.getByRole('textbox', { name: 'Display Name' }).click();
+  await page.getByRole('textbox', { name: 'Display Name' }).fill('test456 edited');
+
+  //employee code change
+  await page.getByRole('textbox', { name: 'Employee Code' }).click();
+  await page.getByRole('textbox', { name: 'Employee Code' }).fill('1234546');
+ 
+
+  //adding group
+   await page.getByRole('button', { name: 'Open' }).click();
+  await page.getByRole('option', { name: 'group22', exact: true }).click();
+  await page.getByTitle('Close').click();
+
+// removing group
+ await page.getByRole('button', { name: 'Open' }).click();
+  await page.getByRole('option', { name: 'group4' }).click();
+  await page.getByTitle('Close').click();
+  await page.getByRole('button', { name: 'Save Changes' }).click();
+
+  //Edit password
+    await page.getByRole('button', { name: 'Go to next page' }).click();
+     await page.getByRole('row', { name: 'Toggle select row TestUser' }).getByLabel('Row Actions').click();
+  await page.getByRole('menuitem', { name: 'Edit Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('1');
+  await page.getByRole('button', { name: 'Save Changes' }).click();
 
 });
 
