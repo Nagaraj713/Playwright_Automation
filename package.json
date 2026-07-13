@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:pulse": "npx playwright test Pulse_Db.spec.js",
+    "test:studio": "npx playwright test Studio_Db.spec.js",
+    "test:headed": "npx playwright test --headed",
+    "report": "npx playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
