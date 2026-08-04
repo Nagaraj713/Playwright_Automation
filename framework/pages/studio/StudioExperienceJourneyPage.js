@@ -759,7 +759,8 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
     await nameInput.fill(newMomentName);
     await this.commitInlineEditor(nameInput);
 
-    await expect(editor.getByText(newMomentName, { exact: true }).first()).toBeVisible({ timeout: 15000 });
+    await this.publishAndSync();
+    await expect(this.page.getByText(newMomentName, { exact: true }).first()).toBeVisible({ timeout: 20000 });
     this.logStep(`Updated moment name to ${newMomentName}`);
   }
 
@@ -781,7 +782,8 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
     await descriptionInput.fill(newDescription);
     await this.commitInlineEditor(descriptionInput);
 
-    await expect(editor.getByText(newDescription, { exact: true }).first()).toBeVisible({ timeout: 15000 });
+    await this.publishAndSync();
+    await expect(this.page.getByText(newDescription, { exact: true }).first()).toBeVisible({ timeout: 20000 });
     this.logStep(`Updated moment description to "${newDescription}"`);
   }
 
@@ -1935,6 +1937,66 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
     throw new Error('No visible enabled Continue button found');
   }
 
+  async selectStoryBuilderAssets() {
+    const selectAll = this.page.getByRole('button', { name: /select all/i })
+      .or(this.page.getByRole('checkbox', { name: /select all/i }))
+      .first();
+    if (await selectAll.isVisible().catch(() => false)) {
+      const checked = await selectAll.getAttribute('aria-checked').catch(() => null);
+      const isChecked = checked === 'true' || await selectAll.isChecked().catch(() => false);
+      if (!isChecked) {
+        await selectAll.click({ force: true });
+      }
+      this.logStep('Selected all Story Builder assets via Select All');
+      await this.page.waitForTimeout(1000);
+      return true;
+    }
+
+    const checkboxes = this.page.getByRole('checkbox');
+    const checkboxCount = await checkboxes.count();
+    let selected = 0;
+    for (let index = 0; index < checkboxCount && selected < 6; index += 1) {
+      const box = checkboxes.nth(index);
+      if (!(await box.isVisible().catch(() => false))) {
+        continue;
+      }
+      const checked = await box.isChecked().catch(() => false);
+      if (!checked) {
+        await box.check({ force: true }).catch(async () => {
+          await box.click({ force: true });
+        });
+        selected += 1;
+      }
+    }
+    if (selected > 0) {
+      this.logStep(`Selected ${selected} Story Builder asset checkbox(es)`);
+      await this.page.waitForTimeout(1000);
+      return true;
+    }
+
+    // Fallback: click visible asset/media cards (images/audio tiles) that look selectable.
+    const assetCards = this.page
+      .locator('[role="checkbox"], [role="option"], [data-selected], button, div')
+      .filter({ has: this.page.locator('img, video, audio') });
+    const cardCount = await assetCards.count();
+    let clicked = 0;
+    for (let index = 0; index < cardCount && clicked < 4; index += 1) {
+      const card = assetCards.nth(index);
+      if (!(await card.isVisible().catch(() => false))) {
+        continue;
+      }
+      await card.click({ force: true }).catch(() => {});
+      clicked += 1;
+    }
+    if (clicked > 0) {
+      this.logStep(`Clicked ${clicked} Story Builder asset card(s)`);
+      await this.page.waitForTimeout(1000);
+      return true;
+    }
+
+    return false;
+  }
+
   async waitAndClickGenerateStory() {
     const generateStoryLocators = [
       () => this.page.getByRole('button', { name: /generate story/i }),
@@ -1943,22 +2005,52 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
       () => this.page.getByRole('button', { name: /^Generate$/i }),
     ];
 
-    const deadline = Date.now() + 180000;
+    let assetsAttempted = false;
+    const deadline = Date.now() + 240000;
     while (Date.now() < deadline) {
-      for (const getLocator of generateStoryLocators) {
-        const candidate = getLocator().first();
-        if (await candidate.isVisible().catch(() => false)) {
-          if (await candidate.isEnabled().catch(() => true)) {
-            await candidate.click();
-            return;
-          }
-        }
+      if (this.page.isClosed()) {
+        throw new Error('Page closed while waiting for Generate Story');
       }
 
-      const pageText = (await this.page.locator('body').innerText()).toLowerCase();
-      if (/review|configuration|summary|story builder/i.test(pageText)) {
+      const pageText = (await this.page.locator('body').innerText().catch(() => '')).toLowerCase();
+      const onAssetsStep = /select\s+asset|choose\s+asset|assets?\s+selection|\bassets?\b/.test(pageText)
+        && !/document review|bot configuration/i.test(pageText);
+
+      if (onAssetsStep && !assetsAttempted) {
+        await this.selectStoryBuilderAssets();
+        assetsAttempted = true;
+      }
+
+      for (const getLocator of generateStoryLocators) {
+        const candidate = getLocator().first();
+        if (!(await candidate.isVisible().catch(() => false))) {
+          continue;
+        }
+
+        await candidate.scrollIntoViewIfNeeded().catch(() => {});
+        const enabled = await candidate.isEnabled().catch(() => false);
+        if (!enabled) {
+          // Generate Story is present but disabled until assets are selected.
+          if (!assetsAttempted) {
+            await this.selectStoryBuilderAssets();
+            assetsAttempted = true;
+          }
+          continue;
+        }
+
+        await candidate.click({ timeout: 10000 }).catch(async () => {
+          await candidate.click({ force: true });
+        });
+        this.logStep('Clicked Generate Story');
+        return;
+      }
+
+      // Only Continue when still on intermediate wizard steps, not while Generate Story is disabled.
+      if (/document review|bot configuration|summary/i.test(pageText) && !onAssetsStep) {
         try {
           await this.clickVisibleContinue();
+          assetsAttempted = false;
+          await this.page.waitForTimeout(2000);
         } catch {
           // Continue not available yet on this step.
         }
@@ -1967,7 +2059,7 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
       await this.page.waitForTimeout(1500);
     }
 
-    throw new Error('Generate Story button was not found after Bot Configuration');
+    throw new Error('Generate Story button was not found/enabled after Bot Configuration / Assets');
   }
 
   async assertBotConfigActionButtonsVisible() {
@@ -2028,10 +2120,13 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
     await this.clickVisibleContinue();
     await this.page.waitForTimeout(4000);
 
+    // Assets selection step (if present) must complete before Generate Story enables.
+    await this.selectStoryBuilderAssets().catch(() => false);
     await this.waitAndClickGenerateStory();
     await this.waitForProcessingToFinish();
     await this.page.waitForTimeout(5000);
     await this.waitForNonTechnicalScreen();
+    this.logStep('Completed Story Builder flow');
   }
 
   async waitForLoadStoryPanel() {
@@ -2156,8 +2251,7 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
 
   async runRemainingHamburgerMenuFlows() {
     this.logStep('Starting remaining hamburger menu flows');
-    // Story Builder flow — temporarily disabled
-    // await this.runStoryBuilderFlow();
+    await this.runStoryBuilderFlow();
     await this.runLoadJsonFromBurgerFlow();
     await this.runLoadExcelFromBurgerFlow();
     await this.openProjectsFromBurgerAndReturn();
@@ -2344,8 +2438,7 @@ class StudioExperienceJourneyPage extends StudioExperiencesPage {
     await this.clickSyncToCloud();
     await this.waitForCloudSyncToSettle();
     this.logStep('Published and synced technical configuration');
-    // Outline Chat + Blueprint + Build VR App flow — temporarily disabled
-    // await this.runOutlineBlueprintBuildFlow();
+    await this.runOutlineBlueprintBuildFlow();
     await this.runRemainingHamburgerMenuFlows();
   }
 

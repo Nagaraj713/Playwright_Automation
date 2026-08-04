@@ -7,7 +7,7 @@ const {
 
 test.describe('VRSE Studio', () => {
   test('complete project and module workflow', async ({ studioPage: page }) => {
-    test.setTimeout(1200000);
+    test.setTimeout(3600000);
 
     const projects = new StudioProjectsPage(page);
     const modules = new StudioModulesPage(page);

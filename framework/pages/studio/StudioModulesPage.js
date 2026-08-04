@@ -87,10 +87,37 @@ class StudioModulesPage extends StudioBasePage {
 
   async openModule(name) {
     await this.open();
-    await this.searchModule(name);
-    await this.moduleCard(name).click();
-    await expect(this.page.getByRole('heading', { name: 'Experiences', exact: true })).toBeVisible();
-    this.logStep(`Opened module: ${name}`);
+
+    const emptyState = this.page.getByRole('heading', { name: /no modules yet/i });
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (await emptyState.isVisible().catch(() => false)) {
+        await this.page.reload({ waitUntil: 'domcontentloaded' });
+        await expect(this.page.getByRole('heading', { name: 'Modules', exact: true })).toBeVisible({
+          timeout: 30000,
+        });
+        await this.page.waitForTimeout(1500);
+        continue;
+      }
+
+      await this.searchModule(name);
+      const card = this.moduleCard(name);
+      if (await card.isVisible({ timeout: 10000 }).catch(() => false)) {
+        await card.click();
+        await expect(this.page.getByRole('heading', { name: 'Experiences', exact: true })).toBeVisible({
+          timeout: 30000,
+        });
+        this.logStep(`Opened module: ${name}`);
+        return;
+      }
+
+      await this.page.reload({ waitUntil: 'domcontentloaded' });
+      await expect(this.page.getByRole('heading', { name: 'Modules', exact: true })).toBeVisible({
+        timeout: 30000,
+      });
+      await this.page.waitForTimeout(1500);
+    }
+
+    throw new Error(`Could not open module "${name}" — modules list remained empty or module card not found.`);
   }
 }
 
